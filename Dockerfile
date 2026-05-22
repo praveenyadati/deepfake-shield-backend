@@ -13,9 +13,12 @@ RUN pip install --no-cache-dir -r /srv/requirements.txt
 # App code
 COPY app /srv/app
 
-# SQLite lives on a mounted volume so data survives container restarts
+# Create the data directory. Persistence is handled by the orchestrator:
+# - Railway: attach a Volume in the dashboard, mount path /data
+# - docker-compose: see the named volume `shield-data:/data` in compose.yml
+# - Fly.io: see fly.toml mounts.
+# Railway rejects Dockerfile VOLUME directives, so we don't declare one here.
 RUN mkdir -p /data
-VOLUME ["/data"]
 
 EXPOSE 8000
 
